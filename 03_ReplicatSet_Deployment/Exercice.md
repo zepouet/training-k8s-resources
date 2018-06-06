@@ -57,15 +57,15 @@ apiVersion: extensions/v1beta1
          - containerPort: 80
 ```
 
-1. Quel est le nombre de POD qui sera lancé lors de la creation du ReplicaSet avec ce fichier de configuration
+1. Donner le nombre de POD qui sera lancé lors de la creation du ReplicaSet avec ce fichier de configuration
 2. Trouver la commande kubectl pour créer ce ReplicatSet. 
-3. Quelle Image Docker est uitlisée ? 
+3. Quelle Image Docker est utilisée ? 
 5. Ce ReplicatSet est-il destiné à la Production ? 
 
 
 ### Configuration du ReplicaSet pour le Pod "auth"
 
-On rappelle le fichier de configuration du POd "auth"
+On rappelle le fichier de configuration du Pod "auth"
 
 ```
 apiVersion: v1
@@ -92,7 +92,7 @@ spec:
 Le ReplicatSet orchestrera 
 - Un replica de 3 POD "auth"
 - Chaque POD étant composé de 1 container Docker dont l'image est kelseyhightower/auth:2.0.0
-- Le container exposera le port en 80/HTTP
+- Le container exposera sur le port en 80/HTTP
 - Le squellette de fichier de configuration est donné ci-après 
 
 6. Compléter le fichier de configuration du ReplicatSet
@@ -158,7 +158,7 @@ spec:
 Le ReplicatSet orchestrera 
 - Un replica de 3 POD "hello"
 - Chaque POD étant composé de 1 container Docker dont l'image est kelseyhightower/hello:2.0.0
-- Le container exposera le port 80/HTTP
+- Le container exposera sur le port 80/HTTP
  
 10. Ecrire le fichier de configuration du ReplicatSet
 11. Creér le ReplicatSet avec le fichier de configuration précedent 
