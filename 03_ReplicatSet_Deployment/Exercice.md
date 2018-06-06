@@ -1,30 +1,30 @@
-# Exercice : Deployer une Application 
+# Exercice : Préparer le déploiement d'une Application 
 
-Dans cet exercice nous allons créer des fichiers de "Deployment" pour chaque service de l'application  "App, A sample 12 Facter Application", publiée par Kelsey Hightower (Google). 
+Dans cet exercice nous allons créer des fichiers de configuraton de type "ReplicaSet" "Deployment" pour chaque service de l'application  "App, A sample 12 Facter Application", publiée par Kelsey Hightower (Google). 
 
 `https://github.com/kelseyhightower/app`
 
-![Application APP](https://github.com/Treeptik/training-k8s-by-treeptik/blob/laurent-branch/tmp_exos/02_Pods%20/images/Treeptik-training-k8s-exo2-app.jpg?raw=true "Application APP")
-
-Elle est composée : 
-
-- d'un module d'authentification JWT : "auth" 
-
-Image docker ( fournie en deux versions ) : `kelseyhightower/auth` 
-
-- d'un module "hello" - un serveur web qui une fois l'étape d'authentification passée renvoit "hello" 
-
-Image docker ( fournie en deux versions ) : `kelseyhightower/hello`  
-
-- A ces deux modules, se rajoute un frontend Nginx qui route le traffic aux composants "auth" et "hello"
 
 
 A la fin de l'exercice nous aurons : 
-- Ecrit les fichiers de configuration de chaque Pod correspondant à "auth" et "hello". 
-- Lancer les Pods. 
-- Inspecter les Pods en utilisant **kubectl** .
+- Ecrit les fichiers de configuration pour "auth" et "hello" ainsi que celui du frontend Nginx "frontend"
+- Crée les : ReplicaSet et Deployment 
+- Abordé l'orchestration, en particulier la scalabilité sur Kubernetes.
 
 
+A la fin de l'exercice l'Application APP ne sera pas encore utilisable. Les différentes parties ne seront pas exposées : 
+- sur internet pour le frontend, 
+- en interne pour les composants "auth" et "hello" 
+
+l'Application APP ne sera pas encore en mesure recevoir et de traiter la requête utlisateur : cette thématique sera traitée dans les parties suivantes. 
+  
 
 
-
+spec:
+   replicas: 3
+   selector:
+     matchExpressions:
+      - {key: app, operator: In, values: [soaktestrs, soaktestrs, soaktest]}
+      - {key: teir, operator: NotIn, values: [production]}
+  template:
+     metadata:
