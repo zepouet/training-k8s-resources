@@ -1,17 +1,15 @@
-# Exercice : Préparer le déploiement d'une Application 
+# Exercice : le Controleur ReplicatSet 
 
-Dans cet exercice nous allons créer des fichiers de configuraton de type "ReplicaSet" et "Deployment" pour chaque service de l'application  "App, A sample 12 Facter Application", publiée par Kelsey Hightower (Google). 
+Dans cet exercice nous allons créer des fichiers de configuraton de type "ReplicaSet" pour chaque service de l'application  "App, A sample 12 Facter Application", publiée par Kelsey Hightower (Google). 
 
 `https://github.com/kelseyhightower/app`
 
-
-
 A la fin de l'exercice nous aurons : 
 - Ecrit les fichiers de configuration pour "auth" et "hello" ainsi que celui du frontend Nginx "frontend"
-- Crée les : ReplicaSet et Deployment pour chaque composant applicatif
-- Abordé l'orchestration, en particulier la scalabilité sur Kubernetes.
+- Crée les : ReplicaSet pour chaque composant applicatif
+- Abordé la scalabilité grâce aux ReplicatSets .
 
-![Application APP](https://github.com/Treeptik/training-k8s-resources/blob/master/03_ReplicatSet_Deployment/images/Treeptik-training-k8s-exo3-1.jpg?raw=true "Application APP")
+![Application APP](https://github.com/Treeptik/training-k8s-resources/blob/master/03_ReplicatSet/images/Treeptik-training-k8s-exo3-1.jpg?raw=true "Application APP")
 
 
 A la fin de l'exercice l'Application APP ne sera pas encore utilisable. Les différentes parties ne seront pas exposées : 
@@ -173,45 +171,3 @@ Cette partie sera détaillée dans la suite de la Formation
 12. Creér le ReplicatSet avec le fichier de configuration précedent 
 13. Quel est le resultat de la commande : `kubectl get pods`
 14. Quel est le resultat de la commande : `kubectl describe rs/hello` && `kubectl describe rs/frontend`
-
-
-## Deployment Kubernetes
-
-### Etude d'un fichier de configuration de Deployment
-
-
-
-On se donne le fichier suivant :
-
-```
-apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  name: soaktest
-spec:
-  replicas: 5
-  template:
-    metadata:
-      labels:
-        app: soaktest
-    spec:
-      containers:
-      - name: soaktest
-        image: nickchase/soaktest
-        ports:
-        - containerPort: 80
-```
-
-
-
-### Configuration des Deployments pour les Pod "auth", "hello" et "frontend"
-
-
-
-
-//Jeudi AM : finir deployment + commencer 04_Services
-//Jeudi PM ; finir 04_Services et commencer 06_Orchestration 
-//Vendredi : finir 06_Orchestration
-// Next week : 05_Stockage + tests
-
-
