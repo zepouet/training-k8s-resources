@@ -24,7 +24,7 @@ l'Application APP ne sera donc pas encore en mesure recevoir et de traiter les r
 
 Le système Kubernetes a connaissance du "status" du Pod, comme nous l'avons vu dans l'exercice 1, mais ne sait pas si ce status est le bon pour accomplir la fonction applicative. 
 
-Il est donc necessaire d'expliquer à Kubernetes, en mode déclaratif, de quelle façon on souhaite que les Pods evoluent ensemble : on parle d'orchestration des Pods. Une fois l'orchestration décrite, il est aussi nécessaire de contrôler que les Pods continuent à fournir le service applicatif attendu. Kubernetes utilise des composants programmables dédiés à ces tâches : Les "Controllers". Les ReplicatSet et les Deployments en sont des exemples.  
+Il est donc necessaire d'expliquer à Kubernetes, en mode déclaratif, de quelle façon on souhaite que les Pods evoluent ensemble : on parle d'orchestration des Pods. Une fois l'orchestration décrite, il est aussi nécessaire de contrôler que les Pods continuent à fournir le service applicatif attendu. Kubernetes utilise des composants programmables dédiés à ces tâches : Les "Controllers". Les ReplicatSets et les Deployments en sont des exemples.  
 
 
 ## ReplicaSet Kubernetes
@@ -117,7 +117,7 @@ spec:
 9. Quel est le resultat de la commande : `kubectl get pods`
 10. Quel est le resultat de la commande : `kubectl get replicasets`
 
-### Configuration des ReplicaSet pour le Pod "hello" et le Pod "frontend"
+### Configuration des ReplicaSets pour le Pod "hello" et le Pod "frontend"
 
 Les deux ReplicatSets pour les Pods "hello" et le Pod "frontend" orchestrerons :
 - Un replica de 3 PODs. 
@@ -143,3 +143,30 @@ Cette partie sera détaillée dans la suite de la Formation
 
 
 ## Deployment Kubernetes
+
+### Etude d'un fichier de configuration de Deployment
+
+On se donne le fichier suivant :
+
+```
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: soaktest
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: soaktest
+    spec:
+      containers:
+      - name: soaktest
+        image: nickchase/soaktest
+        ports:
+        - containerPort: 80
+```
+
+### Configuration des Deployments pour les Pod "auth", "hello" et "frontend"
+
+
