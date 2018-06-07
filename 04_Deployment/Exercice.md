@@ -11,7 +11,7 @@ A la fin de l'exercice nous aurons :
 - Scalé le Deployment de l'application APP version 1.0.0 
 - Mettre a jour - update - de la version de l'Application APP dans sa version 2.0.0 
 
-![Application APP](https://github.com/Treeptik/training-k8s-resources/blob/master/03_ReplicatSet_Deployment/images/Treeptik-training-k8s-exo3-1.jpg?raw=true "Application APP")
+![Application APP](https://github.com/Treeptik/training-k8s-resources/blob/master/04_Deployment/images/Treeptik-training-k8s-exo4-1.jpg?raw=true "Application APP")
 
 
 A la fin de l'exercice l'Application APP ne sera pas encore utilisable. Les différentes parties ne seront pas exposées : 
