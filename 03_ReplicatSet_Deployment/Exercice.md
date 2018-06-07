@@ -74,7 +74,7 @@ Comme tous les objets de l'API Kubernetes, un ReplicaSet est defini avec les cha
 
 On rappelle le fichier de configuration du Pod "auth"
 
-https://github.com/Treeptik/training-k8s-resources/blob/master/02_Pods%20/sources/auth_pod.yaml
+https://github.com/Treeptik/training-k8s-resources/blob/master/02_Pods/sources/auth_pod.yaml
 
 ```
 apiVersion: v1
