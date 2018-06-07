@@ -18,7 +18,7 @@ A la fin de l'exercice l'Application APP ne sera pas encore utilisable. Les diff
 - sur Internet pour le frontend, 
 - en interne pour les composants "auth" et "hello". 
 
-l'Application APP ne sera donc pas encore en mesure recevoir et de traiter les requêtes utlisateurs : cette thématique sera traitée dans les parties suivantes. 
+l'Application APP ne sera donc pas encore en mesure recevoir et de traiter les requêtes utlisateurs : cette thématique sera abordée dans les parties suivantes. 
   
 ## Introduction : 
 
@@ -28,6 +28,39 @@ Il est donc necessaire d'expliquer à Kubernetes, en mode déclaratif, de quelle
 
 
 ## ReplicaSet Kubernetes
+
+Le premier objet **controller** introduit pas Kubernetes a été le **ReplicationController** . Ce composant offre les possibilités de bases qui seront utilisées et améliorées avec les controller plus récents, par exemple : 
+- Superviser de multiples Pods sur de multiple Nodes
+- Utilser les labels pour mener à bien la supervision 
+- Utiliser les replicas comme référence sur le nombre de Pods à orchestrer .... 
+
+L'objet **ReplicaSet** est la nouvelle génération de **ReplicationController**. Le ReplicatSet va superviser de multiples Pods sur de multiple Nodes en s'appuyant sur un nouveau champs : le **selector** - qui ajoute par rapport aux labels, des fonctionnalités avancées en terme de filtrage des Pods a orchestrer. Ci après 2 exemples déclaratifs utilisant le selector 
+
+```
+apiVersion: extensions/v1beta1
+kind: ReplicaSet
+...
+spec:
+   replicas: 3
+   selector:
+     matchLabels:
+       app: soaktestrs
+...
+```
+
+```
+apiVersion: extensions/v1beta1
+kind: ReplicaSet
+...
+spec:
+   replicas: 3
+   selector:
+     matchExpressions:
+      - {key: app, operator: In, values: [soaktestrs, soaktestrs, soaktest]}
+      - {key: teir, operator: NotIn, values: [production]}
+..
+```
+
 
 ### Etude d'un fichier de configuration de ReplicatSet
 
@@ -128,7 +161,7 @@ le fichier de configuration du __Pod "auth"__ ,construit dans l'exercice précé
 
 le fichier de configuration du __Pod "frontend"__ est donné ici :
 
-`https://github.com/Treeptik/training-k8s-resources/blob/master/02_Pods/sources/auth_pod.yaml`
+`https://github.com/Treeptik/training-k8s-resources/blob/master/03_ReplicatSet_Deployment/sources/frontend_pod.yaml`
 
 Vous pourrez remarquer des déclarations supplementaires dans le fichier de configuration du Pod "frontend" : le template du Pod décrit un volume persistant permettant de stocker 
 - Le fichier de configuration de nginx pour ecouter sur le port 443 avec une couche SSL/TLS
@@ -145,6 +178,8 @@ Cette partie sera détaillée dans la suite de la Formation
 ## Deployment Kubernetes
 
 ### Etude d'un fichier de configuration de Deployment
+
+
 
 On se donne le fichier suivant :
 
@@ -167,7 +202,12 @@ spec:
         - containerPort: 80
 ```
 
+
+
 ### Configuration des Deployments pour les Pod "auth", "hello" et "frontend"
+
+
+
 
 //Jeudi AM : finir deployment + commencer 04_Services
 //Jeudi PM ; finir 04_Services et commencer 06_Orchestration 
