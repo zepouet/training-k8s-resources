@@ -101,73 +101,58 @@ Comme tous les objets de l'API Kubernetes, un ReplicaSet est defini avec les cha
 6. Ce ReplicatSet est-il destiné à la Production ? 
 
 
-### Configuration du ReplicaSet pour le Pod "auth"
+### Configuration du ReplicaSet pour les Pods "auth", "hello" et "frontend". 
 
-Le ReplicatSet orchestrera :
-- Un replica de 3 PODs "auth"
+Pour construire les fichiers de configuration des 3 ReplicatSet nous allons nous appuyer sur les fichiers de configuration des Pod "auth", "hello" et "frontend". 
 
-On rappelle que 
-- Dans le fichier de configuration d'un ReplicatSet, le champ **.spec.template** décrit le template d'un Pod
+le fichier de configuration du __Pod "auth"__ est disponible ici 
 
-le fichier de configuration du Pod "auth" est disponible ici 
+`https://github.com/Treeptik/training-k8s-resources/blob/master/03_ReplicatSet/sources/auth_pod.yaml`
 
-`https://github.com/Treeptik/training-k8s-resources/blob/master/02_Pods/sources/auth_pod.yaml`
+le fichier de configuration du __Pod "hello"__ ,construit dans l'exercice précédent, est disponible ici :
 
+`https://github.com/Treeptik/training-k8s-resources/blob/master/03_ReplicatSet/sources/hello_pod.yaml`
 
-7. En vous basant sur les données précédentes, completez le fichier de configuration du ReplicatSet pour le Pod "auth"
+Pour "auth" et hello" nous avons ajouté dans les spécifications du Container : 
+- La sonde **livenessProbe** 
+- La sonde **readinessProbe**
 
-```
-apiVersion: extensions/v1beta1
-kind: ReplicatSet
-metadata:
-  name: auth
-spec:
-  replicas: 
-  selector:
-    matchLabels:
-      app: auth
-  template:
-    metadata:
-      labels:
-        app: 
-        track:
-    spec:
-      containers:
-        - name: 
-          image: 
-          ports:
-            - name: 
-              containerPort: 
-          resources:
-            limits:
-              cpu: 
-              memory: 
-```
-
-8. Creér le ReplicatSet avec le fichier de configuration complété précedement  
-9. Quel est le resultat de la commande : `kubectl get pods`
-10. Quel est le resultat de la commande : `kubectl get replicasets`
-
-### Configuration des ReplicaSets pour le Pod "hello" et le Pod "frontend"
-
-Les deux ReplicatSets pour les Pods "hello" et le Pod "frontend" orchestrerons :
-- Un replica de 3 PODs. 
-
-le fichier de configuration du __Pod "auth"__ ,construit dans l'exercice précédent, est disponible ici :
-
-`https://github.com/Treeptik/training-k8s-resources/blob/master/02_Pods/sources/auth_pod.yaml`
+**kubelet** utilise ces sondes pour superviser le Pod
+- __livenessProbe__ : Pur rendre compte de la disponibilité du/des container(s) dans les Pods. **kubelet** fait un GET sur cette sonde, dans notre cas sur **/healthz** en HTTP:81 (TCP disponibile). Si le code de retour est compris entre 200 et 399 alors la sonde considère le système comme disponible. Pour tout autre code de retour kubelet commande un "kill" & "Restart" du contaianer
+- __readinessProbe__ : Cette sonde renseigne sur la capacité d'un container du Pod a traiter les requêtes applicatves. En exposant sur la terminaison **/readiness** en HTTP:81 (TCP disponibile) un code entre 200 et 399, chaque container du Pod informe **kubelet** qu'il est __prêts__ à recevoir des requetes applicatives (via les services qui seront abordés plus tard) Pour tout autre code de retour, le trafic sera routé sur un autre container. 
 
 le fichier de configuration du __Pod "frontend"__ est donné ici :
 
-`https://github.com/Treeptik/training-k8s-resources/blob/master/03_ReplicatSet_Deployment/sources/frontend_pod.yaml`
+`https://github.com/Treeptik/training-k8s-resources/blob/master/03_ReplicatSet/sources/frontend_pod.yaml`
 
-Vous pourrez remarquer des déclarations supplementaires dans le fichier de configuration du Pod "frontend" : le template du Pod décrit un volume persistant permettant de stocker 
+Nous avons ajouté des déclarations supplementaires dans le fichier de configuration du Pod "frontend" : le template du Pod décrit un volume persistant permettant de stocker 
 - Le fichier de configuration de nginx pour ecouter sur le port 443 avec une couche SSL/TLS
-- Les certificats SSL/TLS ( ! dangeureux sur un dépot public.. ! )
+- Les certificats SSL/TLS ( ! Dépot public ! )
 
-Cette partie sera détaillée dans la suite de la Formation 
- 
-11. Ecrire le fichier de configuration du ReplicatSet pour les Pods "hello" et le Pod "frontend"
-12. Creér le ReplicatSet avec le fichier de configuration précedent 
-13. Quel est le resultat de la commande : `kubectl get pods`
-14. Quel est le resultat de la commande : `kubectl describe rs/hello` && `kubectl describe rs/frontend`
+Cette partie sera détaillée dans la suite de la Formation.  
+
+Les ReplicatSet orchestrerons pour commencer:
+- Un replica de 1 POD "frontend"
+- Un replica de 1 POD "auth"
+- Un replica de 1 POD "hello"
+
+On rappelle que 
+- Dans le fichier de configuration d'un ReplicatSet, le champ **.spec.template** décrit le template d'un Pod (celui décrit dans le fichier de configuration du Pod)
+
+
+7. Contruire le fichier de configuration du ReplicatSet pour le Pod "auth"
+8. Contruire le fichier de configuration du ReplicatSet pour le Pod "hello"
+9. Contruire le fichier de configuration du ReplicatSet pour le Pod "frontend"
+
+10. Creér les 3 ReplicatSets avec les fichiers de configurations complétés précedement.   
+
+11. Quel est le resultat de la commande : `kubectl get pods`
+12. Quel est le resultat de la commande : `kubectl get replicasets`
+
+13. Quel est les resultats des commandes : `kubectl describe rs/auth` && `kubectl describe rs/hello` && `kubectl describe rs/frontend`
+
+
+### Scalabilité 
+
+Les deux ReplicatSets pour les Pods "hello" et le Pod "frontend" orchestrerons :
+- Un replica de 3 PODs.
