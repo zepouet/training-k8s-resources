@@ -7,8 +7,9 @@ Dans cet exercice nous allons créer des fichiers de configuraton de type "Deplo
 
 A la fin de l'exercice nous aurons : 
 - Ecrit les fichiers de configuration pour "auth" et "hello" ainsi que celui du frontend Nginx "frontend"
-- Crée les : ReplicaSet et Deployment pour chaque composant applicatif
-- Abordé l'orchestration, en particulier la scalabilité sur Kubernetes.
+- Crée le Deployments pour tous les composants le l'application APP dans sa version 1.0.0
+- Scalé le Deployment de l'application APP version 1.0.0 
+- Mettre a jour - update - de la version de l'Application APP dans sa version 2.0.0 
 
 ![Application APP](https://github.com/Treeptik/training-k8s-resources/blob/master/03_ReplicatSet_Deployment/images/Treeptik-training-k8s-exo3-1.jpg?raw=true "Application APP")
 
