@@ -14,95 +14,56 @@ A la fin de l'exercice nous aurons :
 ![Application APP](https://github.com/Treeptik/training-k8s-resources/blob/master/04_Deployment/images/Treeptik-training-k8s-exo4-1.jpg?raw=true "Application APP")
 
 
-A la fin de l'exercice l'Application APP ne sera pas encore utilisable. Les différentes parties ne seront pas exposées : 
+Les différentes parties ne seront pas exposées : 
 - sur Internet pour le frontend, 
 - en interne pour les composants "auth" et "hello". 
 
-l'Application APP ne sera donc pas encore en mesure recevoir et de traiter les requêtes utlisateurs : cette thématique sera abordée dans les parties suivantes. 
-
-
-
-
+L'Application APP n'est pas encore en mesure reçevoir et de traiter les requêtes utlisateurs : cette thématique sera abordée dans la partie dédiée aux Services.  
 
   
 ## Introduction : 
 
-Lorsque devops ... il faut un moyen de update //... 
-Pour les Replication Controllers possible en mode CLI kubectl avec la commande rolling-update, on ne peut cependant pas programme ( yaml) 
-La commande rolling update pas supportée pour l'oje. par les ReplicaSets
-Le set de commande kubectl pour les Replication Controllers est aussi supporté par les ReplicaSets __à l'execption de__ la commande rolling-update. 
+Les pratiques DevOps,CI/CD, impliquent de pouvoir déployer de nouvelles versions applicatives à la volée c'est à dire sans coupure de service. 
 
-Une nouvelle strucure -> deplyement 
+L'objet Deployement se positionne pour répondre à ce besoin, de pouvoir mettre à jour une stack applicative en adoptant le point de vue suivant : 
+- La stack applicative est composées de Pods 
+- L'update de la stack applicative consiste à l'update des containers des Pods 
+- Un ReplicatSet supervise les Pods 
+- L'Objet Deployement pilote le ReplicatSet des Pods - notamment pour et pendant la mise à jour de la stack applicative. Cette partie est importante : le Deployment a besoin de son ReplicatSet pour opérer car il s'appuit dessus pour les appels aux objets de l'API de Kubernetes. 
 
+En definisant un object Deployment avec son fichier de configuration .yaml, on définit l'état du Pod à atteindre en particulier au niveau de versionning. Le  Deployment assure la transition vers le nouvel état de telle manière à ne pas couper le service applicatif. 
 
-Le système Kubernetes a connaissance du "status" du Pod, comme nous l'avons vu dans l'exercice 1, mais ne sait pas si ce status est le bon pour accomplir la fonction applicative. 
-
-Il est donc necessaire d'expliquer à Kubernetes, en mode déclaratif, de quelle façon on souhaite que les Pods evoluent ensemble : on parle d'orchestration des Pods. Une fois l'orchestration décrite, il est aussi nécessaire de contrôler que les Pods continuent à fournir le service applicatif attendu. Kubernetes utilise des composants programmables dédiés à ces tâches : Les "Controllers". Les ReplicatSets et les Deployments en sont des exemples.  
-
-
-## ReplicaSet Kubernetes
-
-Le premier objet **controller** introduit pas Kubernetes a été le **ReplicationController** . Ce composant offre les possibilités de bases qui seront utilisées et améliorées avec les controllers plus récents, par exemple : 
-- Superviser de multiples Pods sur de multiples Nodes,
-- Utilser les labels pour mener à bien la supervision, 
-- Utiliser les replicas comme référence sur le nombre de Pods à orchestrer .... 
-
-L'objet **ReplicaSet** est la nouvelle génération de **ReplicationController**. Le ReplicatSet va superviser de multiples Pods sur de multiple Nodes en s'appuyant sur un nouveau champs : le **selector** - qui ajoute par rapport aux labels, des fonctionnalités avancées en terme de filtrage des Pods a orchestrer. Ci après 2 exemples déclaratifs utilisant le selector 
-
-```
-apiVersion: extensions/v1beta1
-kind: ReplicaSet
-...
-spec:
-   replicas: 3
-   selector:
-     matchLabels:
-       app: soaktestrs
-...
-```
-
-```
-apiVersion: extensions/v1beta1
-kind: ReplicaSet
-...
-spec:
-   replicas: 3
-   selector:
-     matchExpressions:
-      - {key: app, operator: In, values: [soaktestrs, soaktestrs, soaktest]}
-      - {key: tier, operator: NotIn, values: [production]}
-..
-```
+Grâce à l'objet Deployement on peut par exemple : 
+- Créer from scracth une stack applicative dans sa version 1
+- Scaler le deployment version 1 pour s'adapter à la charge applicative. 
+- Mettre à jour cette stack applicative dans une version 2 
+- Mettre en pause / reprendre un deployement.... 
 
 
-### Etude d'un fichier de configuration de ReplicatSet
+### Etude d'un fichier de configuration de Deployment
 
 On se donne le fichier suivant :
 
 ```
- apiVersion: extensions/v1beta1
- kind: ReplicaSet
- metadata:
-   name: soaktestrs
- spec:
-   replicas: 3
-   selector:
-     matchLabels:
-       app: soaktestrs
-   template:
-     metadata:
-       labels:
-         app: soaktestrs
-         environment: dev
-     spec:
-       containers:
-       - name: soaktestrs
-         image: nickchase/soaktest
-         ports:
-         - containerPort: 80
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: soaktest
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: soaktest
+    spec:
+      containers:
+      - name: soaktest
+        image: nickchase/soaktest
+        ports:
+        - containerPort: 80
 ```
 
-Comme tous les objets de l'API Kubernetes, un ReplicaSet est defini avec les champs **apiVersion**, **kind**, et **metadata**. A cela on ajoute le champs **spec** qui décrit les spécifications du status d'un Pod à atteindre et à maintenir lors de l'orchestration. 
+Comme tous les objets de l'API Kubernetes, un Deployment est defini avec les champs **apiVersion**, **kind**, et **metadata**. A cela on ajoute le champs **spec** qui décrit les spécifications du status d'un Pod à atteindre et à maintenir. 
 
 - Une spécificité du controler ReplicatSet est le champs **.spec.selector.**. Le ReplicatSet gère les Pods dont le label correspond au selector défini dans ce champs.
 - Le champ **.spec.template** décrit le template d'un Pod, qui est encapsulé dans la configuration du ReplicaSet. On remarque qu'il s'agit du même shéma que le fichier de configuration d'un Pod. En particulier on retrouve le champ **.spec.template.metadata.labels** qui sera comparé à **.spec.selector.** . Si ces deux champs ne sont pas identiques l'API rejetera la configuration. 

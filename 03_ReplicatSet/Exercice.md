@@ -12,11 +12,11 @@ A la fin de l'exercice nous aurons :
 ![Application APP](https://github.com/Treeptik/training-k8s-resources/blob/master/03_ReplicatSet/images/Treeptik-training-k8s-exo3-1.jpg?raw=true "Application APP")
 
 
-A la fin de l'exercice l'Application APP ne sera pas encore utilisable. Les différentes parties ne seront pas exposées : 
+Les différentes parties ne seront pas exposées : 
 - sur Internet pour le frontend, 
 - en interne pour les composants "auth" et "hello". 
 
-l'Application APP ne sera donc pas encore en mesure recevoir et de traiter les requêtes utlisateurs : cette thématique sera abordée dans les parties suivantes. 
+L'Application APP n'est pas encore en mesure reçevoir et de traiter les requêtes utlisateurs : cette thématique sera abordée dans la partie dédiée aux Services
   
 ## Introduction : 
 
