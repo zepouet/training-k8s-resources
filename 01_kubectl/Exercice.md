@@ -19,7 +19,7 @@ Plus tard nous envisagerons le provisionning d'Applications, qui consiste à aut
 
 A la fin de l'exercice nous aurons déployé __en ligne de commande via *kubectl*__ une application Hello-Node telle que :
 
-![Architecture Cible de l'exercice](https://github.com/Treeptik/training-k8s-by-treeptik/blob/laurent-branch/tmp_exos/01_kubectl/images/Treeptik-training-k8s-exo1.jpg?raw=true "Architecture Cible de l'exercice")
+![Architecture Cible de l'exercice](https://github.com/Treeptik/training-k8s-resources/blob/master/01_kubectl/images/Treeptik-training-k8s-exo1.jpg?raw=true "Architecture Cible de l'exercice")
 
 La charge de travail déployée via un POD est conteneurisé en utilisant Docker. Kubernetes via l'objet ReplicaSet sera en mesure de provisionner plusieurs replicas. L'image du container est disponible sur :
 

@@ -142,4 +142,4 @@ Cette partie sera détaillée dans la suite de la Formation
 14. Quel est le resultat de la commande : `kubectl describe rs/hello` && `kubectl describe rs/frontend`
 
 
-
+## Deployment Kubernetes
