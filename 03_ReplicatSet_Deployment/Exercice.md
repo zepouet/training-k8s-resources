@@ -169,4 +169,9 @@ spec:
 
 ### Configuration des Deployments pour les Pod "auth", "hello" et "frontend"
 
+//Jeudi AM : finir deployment + commencer 04_Services
+//Jeudi PM ; finir 04_Services et commencer 06_Orchestration 
+//Vendredi : finir 06_Orchestration
+// Next week : 05_Stockage + tests
+
 
