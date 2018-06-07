@@ -159,7 +159,7 @@ On rappelle que
 ### Scalabilité 
 
 Il est facile de re-dimensionner à la volée (scale-up ou scale-down) un ReplicatSet. 
-Puisque les ReplicatSets ont été crée en utilisant des fichiers de configuration il s'agit de mettre à jour le champ .spec.replicas avec la nouvelle valeur cible. 
+Puisque les ReplicatSets ont été crée en utilisant des fichiers de configuration il s'agit de mettre à jour le champ **.spec.replicas** avec la nouvelle valeur cible. 
 
 Les ReplicatSets seront scalés tels que :
 - Un replica de 5 POD "frontend"
@@ -173,9 +173,9 @@ Les ReplicatSets seront scalés tels que :
 
 __Perpectives__ : 
 
-Cette approche de la scalabilité est limitée : même si le système Kubernetes se charge de toutes les opérations au niveau du cluster pour re-dimensionner à la volée un ReplicatSet de Pod(s), il faut qu'un opérateur, en mode déclaratif, intervienne manuellement pour renseigner les nouveaux fichier de configuration 
+Cette approche de la scalabilité est limitée : même si le système Kubernetes se charge de toutes les opérations au niveau du cluster pour re-dimensionner à la volée un ReplicatSet de Pod(s), il faut qu'un opérateur, en mode déclaratif, intervienne manuellement pour renseigner les nouveaux fichiers de configuration 
 
-Les __Horizontal Pod Autoscaler (HPA)__ est une ressource de l'API qui permet de re-dimmensionner un ReplicaSet ( ou un Deployment ) de Pods en fonction de l'utilisation d'une métrique. Par défaut, le re-dimmensionnement en fonction de l'utilisation du CPU est implémentée dans la version autoscaling/v1 de Kubernetes. La prise en charge de "customs" metrics est disponible dans la version autoscaling/v2beta1 de l'API. 
+Les __Horizontal Pod Autoscaler (HPA)__ est une ressource de l'API qui permet de re-dimmensionner un ReplicaSet ( ou un Deployment ) de Pods en fonction de l'utilisation d'une métrique. Par défaut, le re-dimmensionnement en fonction de l'utilisation du CPU est implémentée dans la version autoscaling/v1 de Kubernetes. La prise en charge de "customs metrics" est disponible dans la version autoscaling/v2beta1 de l'API. 
 
 
 
