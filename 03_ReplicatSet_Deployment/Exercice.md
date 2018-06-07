@@ -59,7 +59,7 @@ On se donne le fichier suivant :
 Comme tous les objets de l'API Kubernetes, un ReplicaSet est defini avec les champs **apiVersion**, **kind**, et **metadata**. A cela on ajoute le champs **spec** qui décrit les spécifications du status d'un Pod à atteindre et à maintenir lors de l'orchestration. 
 
 - Une spécificité du controler ReplicatSet est le champs **.spec.selector.**. Le ReplicatSet gère les Pods dont le label correspond au selector défini dans ce champs.
-- Le champ .spec.template décrit le template d'un Pod, qui est encapsulé dans la configuration du ReplicaSet. On remarque qu'il s'agit du même shéma que le fichier de configuration d'un Pod. En particulier on retrouve le champ **.spec.template.metadata.labels** qui sera comparé à **.spec.selector.** . Si ces deux champs ne sont pas identiques l'API rejetera la configuration. 
+- Le champ **.spec.template** décrit le template d'un Pod, qui est encapsulé dans la configuration du ReplicaSet. On remarque qu'il s'agit du même shéma que le fichier de configuration d'un Pod. En particulier on retrouve le champ **.spec.template.metadata.labels** qui sera comparé à **.spec.selector.** . Si ces deux champs ne sont pas identiques l'API rejetera la configuration. 
 
 
 1. Donner le nombre de POD qui sera lancé lors de la creation du ReplicaSet avec ce fichier de configuration
@@ -72,43 +72,22 @@ Comme tous les objets de l'API Kubernetes, un ReplicaSet est defini avec les cha
 
 ### Configuration du ReplicaSet pour le Pod "auth"
 
-On rappelle le fichier de configuration du Pod "auth"
-
-https://github.com/Treeptik/training-k8s-resources/blob/master/02_Pods/sources/auth_pod.yaml
-
-```
-apiVersion: v1
-kind: Pod
-metadata:
-  name: auth
-  labels:
-    app: auth
-    track: stable_1.0.0
-spec:
-  containers:
-    - name: auth
-      image: kelseyhightower/auth:1.0.0
-      ports:
-        - name: http
-          containerPort: 8080
-      resources:
-        limits:
-          cpu: 0.2
-          memory: "10Mi"
-```
-
-
-Le ReplicatSet orchestrera 
+Le ReplicatSet orchestrera :
 - Un replica de 3 PODs "auth"
-- Chaque POD étant composé de 1 container Docker dont l'image est kelseyhightower/auth:2.0.0
-- Le container exposera sur le port en 80/HTTP
-- Le squellette de fichier de configuration est donné ci-après 
 
-7. Compléter le fichier de configuration du ReplicatSet
+On rappelle que 
+- Dans le fichier de configuration d'un ReplicatSet, le champ **.spec.template** décrit le template d'un Pod
+
+le fichier de configuration du Pod "auth" est disponible ici 
+
+`https://github.com/Treeptik/training-k8s-resources/blob/master/02_Pods/sources/auth_pod.yaml`
+
+
+7. En vous basant sur les données précédentes, completez le fichier de configuration du ReplicatSet pour le Pod "auth"
 
 ```
 apiVersion: extensions/v1beta1
-kind: 
+kind: ReplicatSet
 metadata:
   name: auth
 spec:
@@ -119,59 +98,48 @@ spec:
   template:
     metadata:
       labels:
-        app: auth
-        track: stable_2.0.0
+        app: 
+        track:
     spec:
       containers:
-        - name: auth
+        - name: 
           image: 
           ports:
-            - name: http
+            - name: 
               containerPort: 
           resources:
             limits:
-              cpu: 0.2
-              memory: "10Mi"
+              cpu: 
+              memory: 
 ```
 
-8. Creér le ReplicatSet avec le fichier de configuration précedent 
+8. Creér le ReplicatSet avec le fichier de configuration complété précedement  
 9. Quel est le resultat de la commande : `kubectl get pods`
 10. Quel est le resultat de la commande : `kubectl get replicasets`
 
-### Configuration du ReplicaSet pour le Pod "hello"
+### Configuration des ReplicaSet pour le Pod "hello" et le Pod "frontend"
 
-En sachant que le ReplicatSet orchestrera 
-- Un replica de 3 PODs "hello"
-- Et que Le Pod template est donné par le fichier de configuration du Pod "hello" ci dessous. 
+Les deux ReplicatSets pour les Pods "hello" et le Pod "frontend" orchestrerons :
+- Un replica de 3 PODs. 
 
-```
-apiVersion: v1
-kind: Pod
-metadata:
-  name: hello
-  labels:
-    app: hello
-    track: stable_1.0.0
-spec:
-  containers:
-    - name: hello
-      image: kelseyhightower/hello:1.0.0
-      ports:
-        - name: http
-          containerPort: 80
-      resources:
-        limits:
-          cpu: 0.3
-          memory: "50Mi"
-```
+le fichier de configuration du __Pod "auth"__ ,construit dans l'exercice précédent, est disponible ici :
+
+`https://github.com/Treeptik/training-k8s-resources/blob/master/02_Pods/sources/auth_pod.yaml`
+
+le fichier de configuration du __Pod "frontend"__ est donné ici :
+
+`https://github.com/Treeptik/training-k8s-resources/blob/master/02_Pods/sources/auth_pod.yaml`
+
+Vous pourrez remarquer des déclarations supplementaires dans le fichier de configuration du Pod "frontend" : le template du Pod décrit un volume persistant permettant de stocker 
+- Le fichier de configuration de nginx pour ecouter sur le port 443 avec une couche SSL/TLS
+- Les certificats SSL/TLS ( ! dangeureux sur un dépot public.. ! )
+
+Cette partie sera détaillée dans la suite de la Formation 
  
-11. Ecrire le fichier de configuration du ReplicatSet pour le Pod "hello"
+11. Ecrire le fichier de configuration du ReplicatSet pour les Pods "hello" et le Pod "frontend"
 12. Creér le ReplicatSet avec le fichier de configuration précedent 
 13. Quel est le resultat de la commande : `kubectl get pods`
-14. Quel est le resultat de la commande : `kubectl describe rs/hello`
+14. Quel est le resultat de la commande : `kubectl describe rs/hello` && `kubectl describe rs/frontend`
 
-### Configuration du ReplicaSet pour le Pod "frontend"
-
-Le "frontend" est un Pod qui lance une image Docker : **nginx:1.9.14** . Le serveur nginx recoit les requêtes utilisateur en HTTPS. Le tunnel SSL/TLS 
 
 
