@@ -29,9 +29,9 @@ Il est donc necessaire d'expliquer à Kubernetes, en mode déclaratif, de quelle
 
 ## ReplicaSet Kubernetes
 
-Le premier objet **controller** introduit pas Kubernetes a été le **ReplicationController** . Ce composant offre les possibilités de bases qui seront utilisées et améliorées avec les controller plus récents, par exemple : 
-- Superviser de multiples Pods sur de multiple Nodes
-- Utilser les labels pour mener à bien la supervision 
+Le premier objet **controller** introduit pas Kubernetes a été le **ReplicationController** . Ce composant offre les possibilités de bases qui seront utilisées et améliorées avec les controllers plus récents, par exemple : 
+- Superviser de multiples Pods sur de multiples Nodes,
+- Utilser les labels pour mener à bien la supervision, 
 - Utiliser les replicas comme référence sur le nombre de Pods à orchestrer .... 
 
 L'objet **ReplicaSet** est la nouvelle génération de **ReplicationController**. Le ReplicatSet va superviser de multiples Pods sur de multiple Nodes en s'appuyant sur un nouveau champs : le **selector** - qui ajoute par rapport aux labels, des fonctionnalités avancées en terme de filtrage des Pods a orchestrer. Ci après 2 exemples déclaratifs utilisant le selector 
@@ -57,7 +57,7 @@ spec:
    selector:
      matchExpressions:
       - {key: app, operator: In, values: [soaktestrs, soaktestrs, soaktest]}
-      - {key: teir, operator: NotIn, values: [production]}
+      - {key: tier, operator: NotIn, values: [production]}
 ..
 ```
 

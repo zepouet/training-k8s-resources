@@ -11,11 +11,11 @@ spec:
     metadata:
       labels:
         app: auth
-        track: stable_2.0.0
+        track: stable_1.0.0
     spec:
       containers:
         - name: auth
-          image: "kelseyhightower/auth:2.0.0"
+          image: "kelseyhightower/auth:1.0.0"
           ports:
             - name: http
               containerPort: 80
