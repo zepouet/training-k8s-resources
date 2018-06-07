@@ -32,7 +32,9 @@ Le premier objet **controller** introduit pas Kubernetes a été le **Replicatio
 - Utilser les labels pour mener à bien la supervision, 
 - Utiliser les replicas comme référence sur le nombre de Pods à orchestrer .... 
 
-L'objet **ReplicaSet** est la nouvelle génération de **ReplicationController**. Le ReplicatSet va superviser de multiples Pods sur de multiple Nodes en s'appuyant sur un nouveau champs : le **selector** - qui ajoute par rapport aux labels, des fonctionnalités avancées en terme de filtrage des Pods a orchestrer. Ci après 2 exemples déclaratifs utilisant le selector 
+L'objet **ReplicaSet** est la nouvelle génération de **ReplicationController**. Deux 
+
+- Le ReplicatSet va superviser de multiples Pods sur de multiple Nodes en s'appuyant sur un nouveau champs : le **selector** - qui ajoute par rapport aux labels, des fonctionnalités avancées en terme de filtrage des Pods a orchestrer. Ci après 2 exemples déclaratifs utilisant le selector 
 
 ```
 apiVersion: extensions/v1beta1
@@ -132,7 +134,7 @@ Nous avons ajouté des déclarations supplementaires dans le fichier de configur
 
 Cette partie sera détaillée dans la suite de la Formation.  
 
-Les ReplicatSet orchestrerons pour commencer:
+Les ReplicatSets orchestrerons pour commencer:
 - Un replica de 1 POD "frontend"
 - Un replica de 1 POD "auth"
 - Un replica de 1 POD "hello"
@@ -155,5 +157,25 @@ On rappelle que
 
 ### Scalabilité 
 
-Les deux ReplicatSets pour les Pods "hello" et le Pod "frontend" orchestrerons :
-- Un replica de 3 PODs.
+Il est facile de re-dimensionner à la volée (scale-up ou scale-down) un ReplicatSet. 
+Puisque les ReplicatSets ont été crée en utilisant des fichiers de configuration il s'agit de mettre à jour le champ .spec.replicas avec la nouvelle valeur cible. 
+
+Les ReplicatSets seront scalés tels que :
+- Un replica de 5 POD "frontend"
+- Un replica de 5 POD "auth"
+- Un replica de 5 POD "hello"
+
+14. Mettre à jour les fichiers de Configurations pour les 3 ReplicatSets
+15. Que faut il faire pour que les nouvelles valeures cibles de replicas soient prises en compte ? 
+16. Decrivez précisement les nouveaux groupes de PODs : quel est le nom des pods, sur quels noeuds sont-ils executés ?  
+17. A votre avis, que ce passe t'il si un Node tombe en panne ? //
+
+__Perpectives__ : 
+
+Cette approche de la scalabilité est limitée : même si le système Kubernetes se charge de toutes les opérations au niveau du cluster pour re-dimensionner à la volée un ReplicatSet de Pod(s), il faut qu'un opérateur, en mode déclaratif, intervienne manuellement pour renseigner les nouveaux fichier de configuration 
+
+Les __Horizontal Pod Autoscaler (HPA)__ est une ressource de l'API qui permet de re-dimmensionner un ReplicaSet ( ou un Deployment ) de Pods en fonction de l'utilisation d'une métrique. Par défaut, le re-dimmensionnement en fonction de l'utilisation du CPU est implémentée dans la version autoscaling/v1 de Kubernetes. La prise en charge de "customs" metrics est disponible dans la version autoscaling/v2beta1 de l'API. 
+
+
+
+

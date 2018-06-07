@@ -1,9 +1,8 @@
-# Exercice : Préparer le déploiement d'une Application 
+# Exercice : le Controleur Deployment
 
-Dans cet exercice nous allons créer des fichiers de configuraton de type "ReplicaSet" et "Deployment" pour chaque service de l'application  "App, A sample 12 Facter Application", publiée par Kelsey Hightower (Google). 
+Dans cet exercice nous allons créer des fichiers de configuraton de type "Deployment" pour chaque service de l'application  "App, A sample 12 Facter Application", publiée par Kelsey Hightower (Google). 
 
 `https://github.com/kelseyhightower/app`
-
 
 
 A la fin de l'exercice nous aurons : 
@@ -19,8 +18,21 @@ A la fin de l'exercice l'Application APP ne sera pas encore utilisable. Les diff
 - en interne pour les composants "auth" et "hello". 
 
 l'Application APP ne sera donc pas encore en mesure recevoir et de traiter les requêtes utlisateurs : cette thématique sera abordée dans les parties suivantes. 
+
+
+
+
+
   
 ## Introduction : 
+
+Lorsque devops ... il faut un moyen de update //... 
+Pour les Replication Controllers possible en mode CLI kubectl avec la commande rolling-update, on ne peut cependant pas programme ( yaml) 
+La commande rolling update pas supportée pour l'oje. par les ReplicaSets
+Le set de commande kubectl pour les Replication Controllers est aussi supporté par les ReplicaSets __à l'execption de__ la commande rolling-update. 
+
+Une nouvelle strucure -> deplyement 
+
 
 Le système Kubernetes a connaissance du "status" du Pod, comme nous l'avons vu dans l'exercice 1, mais ne sait pas si ce status est le bon pour accomplir la fonction applicative. 
 
