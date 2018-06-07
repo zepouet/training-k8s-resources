@@ -34,7 +34,7 @@ Il est donc necessaire d'expliquer à Kubernetes, en mode déclaratif, de quelle
 On se donne le fichier suivant :
 
 ```
-apiVersion: extensions/v1beta1
+ apiVersion: extensions/v1beta1
  kind: ReplicaSet
  metadata:
    name: soaktestrs
@@ -97,7 +97,7 @@ spec:
 
 
 Le ReplicatSet orchestrera 
-- Un replica de 3 POD "auth"
+- Un replica de 3 PODs "auth"
 - Chaque POD étant composé de 1 container Docker dont l'image est kelseyhightower/auth:2.0.0
 - Le container exposera sur le port en 80/HTTP
 - Le squellette de fichier de configuration est donné ci-après 
@@ -138,7 +138,9 @@ spec:
 
 ### Configuration du ReplicaSet pour le Pod "hello"
 
-On rappelle le fichier de configuration du Pod "hello"
+En sachant que le ReplicatSet orchestrera 
+- Un replica de 3 PODs "hello"
+- Et que Le Pod template est donné par le fichier de configuration du Pod "hello" ci dessous. 
 
 ```
 apiVersion: v1
@@ -160,14 +162,14 @@ spec:
           cpu: 0.3
           memory: "50Mi"
 ```
-
-
-Le ReplicatSet orchestrera 
-- Un replica de 3 POD "hello"
-- Chaque POD étant composé de 1 container Docker dont l'image est kelseyhightower/hello:2.0.0
-- Le container exposera sur le port 80/HTTP
  
-11. Ecrire le fichier de configuration du ReplicatSet
+11. Ecrire le fichier de configuration du ReplicatSet pour le Pod "hello"
 12. Creér le ReplicatSet avec le fichier de configuration précedent 
 13. Quel est le resultat de la commande : `kubectl get pods`
-14. Quel est le resultat de la commande : `kubectl get replicasets`
+14. Quel est le resultat de la commande : `kubectl describe rs/hello`
+
+### Configuration du ReplicaSet pour le Pod "frontend"
+
+Le "frontend" est un Pod qui lance une image Docker : **nginx:1.9.14** . Le serveur nginx recoit les requêtes utilisateur en HTTPS. Le tunnel SSL/TLS 
+
+

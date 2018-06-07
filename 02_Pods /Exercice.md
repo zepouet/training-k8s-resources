@@ -26,7 +26,7 @@ A la fin de l'exercice nous aurons :
 - Lancer les Pods. 
 - Inspecter les Pods en utilisant **kubectl** .
 
-Les Pods sont pour le moment indépendants. Dans les parties suivantes nous étudierons les objets qui permettrons d'orchestrer ces Pods entre eux et ainsi de remplir la fonction applicative : retourner "hello" à une requête HTTP d'un utilisateur.     
+Les Pods sont pour le moment indépendants. Dans les parties suivantes nous étudierons les objets qui permettrons d'orchestrer ces Pods entre eux et ainsi de remplir la fonction applicative : retourner "hello" à une requête HTTPS d'un utilisateur.     
 
 ## Pod "auth"
 
