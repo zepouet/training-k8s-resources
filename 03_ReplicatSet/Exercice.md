@@ -54,8 +54,8 @@ spec:
    replicas: 3
    selector:
      matchExpressions:
-      - {key: app, operator: In, values: [soaktestrs, soaktestrs, soaktest]}
-      - {key: tier, operator: NotIn, values: [production]}
+      - {key: app, operator: In, values: [soaktestrs, soaktestrcs, soaktest]}
+      - {key: track, operator: NotIn, values: [production]}
 ..
 ```
 
@@ -72,13 +72,14 @@ On se donne le fichier suivant :
  spec:
    replicas: 3
    selector:
-     matchLabels:
-       app: soaktestrs
+     matchExpressions:
+      - {key: app, operator: In, values: [soaktest1, soaktest2, soaktest]}
+      - {key: track, operator: NotIn, values: [production, stagging]}
    template:
      metadata:
        labels:
-         app: soaktestrs
-         environment: dev
+         app: soaktestest1
+         track: dev
      spec:
        containers:
        - name: soaktestrs
@@ -90,14 +91,14 @@ On se donne le fichier suivant :
 Comme tous les objets de l'API Kubernetes, un ReplicaSet est defini avec les champs **apiVersion**, **kind**, et **metadata**. A cela on ajoute le champs **spec** qui décrit les spécifications du status d'un Pod à atteindre et à maintenir lors de l'orchestration. 
 
 - Une spécificité du controler ReplicatSet est le champs **.spec.selector.**. Le ReplicatSet gère les Pods dont le label correspond au selector défini dans ce champs.
-- Le champ **.spec.template** décrit le template d'un Pod, qui est encapsulé dans la configuration du ReplicaSet. On remarque qu'il s'agit du même shéma que le fichier de configuration d'un Pod. En particulier on retrouve le champ **.spec.template.metadata.labels** qui sera comparé à **.spec.selector.** . Si ces deux champs ne sont pas identiques l'API rejetera la configuration. 
+- Le champ **.spec.template** décrit le template d'un Pod, qui est encapsulé dans la configuration du ReplicaSet. On remarque qu'il s'agit du même shéma que le fichier de configuration d'un Pod. En particulier on retrouve le champ **.spec.template.metadata.labels** . Le selector recherche dans ce champs les valeurs qui correpondent **.spec.selector.**. Si aucune correpondance n'est trouvée, l'API rejetera la configuration.
 
 
 1. Donner le nombre de POD qui sera lancé lors de la creation du ReplicaSet avec ce fichier de configuration
 2. Trouver la commande kubectl pour créer ce ReplicatSet. 
 3. Quelle Image Docker est utilisée ? 
 4. Quel sont les labels associés au Pod qui sera orchestré par ce ReplicaSet ? 
-5. Quel est le selector pour ce ReplicaSet ? A comparer avec la réponse du 4. 
+5. Expliquer le selector pour ce ReplicaSet ? A comparer avec la réponse du 4. 
 6. Ce ReplicatSet est-il destiné à la Production ? 
 
 
