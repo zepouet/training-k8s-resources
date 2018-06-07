@@ -1,18 +1,21 @@
 apiVersion: extensions/v1beta1
-kind: Deployment
+kind: ReplicaSet
 metadata:
-  name: auth
+  name: hello
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: hello
   template:
     metadata:
       labels:
-        app: auth
-        track: stable_2.0.0
+        app: hello
+        track: stable_1.0.0
     spec:
       containers:
-        - name: auth
-          image: "kelseyhightower/auth:2.0.0"
+        - name: hello
+          image: "kelseyhightower/hello:1.0.0"
           ports:
             - name: http
               containerPort: 80
