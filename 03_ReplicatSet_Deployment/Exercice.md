@@ -1,6 +1,6 @@
 # Exercice : Préparer le déploiement d'une Application 
 
-Dans cet exercice nous allons créer des fichiers de configuraton de type "ReplicaSet" "Deployment" pour chaque service de l'application  "App, A sample 12 Facter Application", publiée par Kelsey Hightower (Google). 
+Dans cet exercice nous allons créer des fichiers de configuraton de type "ReplicaSet" et "Deployment" pour chaque service de l'application  "App, A sample 12 Facter Application", publiée par Kelsey Hightower (Google). 
 
 `https://github.com/kelseyhightower/app`
 
@@ -73,6 +73,8 @@ Comme tous les objets de l'API Kubernetes, un ReplicaSet est defini avec les cha
 ### Configuration du ReplicaSet pour le Pod "auth"
 
 On rappelle le fichier de configuration du Pod "auth"
+
+https://github.com/Treeptik/training-k8s-resources/blob/master/02_Pods%20/sources/auth_pod.yaml
 
 ```
 apiVersion: v1

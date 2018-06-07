@@ -18,7 +18,7 @@ Image docker ( fournie en deux versions ) : `kelseyhightower/auth`
 
 Image docker ( fournie en deux versions ) : `kelseyhightower/hello`  
 
-- A ces deux modules, se rajoute un frontend Nginx qui route le traffic aux composants "auth" et "hello"
+- A ces deux modules, se rajoute un frontend Nginx qui route le traffic HTTPS aux composants "auth" et "hello"
 
 
 A la fin de l'exercice nous aurons : 
