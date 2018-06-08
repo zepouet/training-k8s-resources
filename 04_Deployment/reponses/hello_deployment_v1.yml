@@ -7,7 +7,7 @@ spec:
   selector: // Une des manières possibles. Exemple avec matchLabels et matchExpressions
     matchLabels:
       app: hello
-      environement: dev
+      environement: production
       release: stable
       version: 1.0.0 
     matchExpressions:  
@@ -17,7 +17,7 @@ spec:
     metadata:
       labels:
         app: hello
-        environement: dev
+        environement: production
         partition: training-k8s
         release: stable
         tier: webserver
