@@ -4,7 +4,10 @@ metadata:
   name: auth
   labels:
     app: auth
-    track: stable_1.0.0
+    realease: stable
+    tier: authentification
+    environement: dev
+    partition: training-k8s
 spec:
   containers:
     - name: auth

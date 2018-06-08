@@ -4,7 +4,10 @@ metadata:
   name: frontend
   labels:
     app: frontend
-    track: stable_1.0.0
+    environement: production  
+    partition: training-k8s      
+    release: stable
+    tier: fronthttps
 spec:
   containers:
     - name: nginx

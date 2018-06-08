@@ -1,15 +1,28 @@
+
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: auth
 spec:
   replicas: 1
+  selector: // Une des manières possibles. Exemple avec matchLabels et matchExpressions
+    matchLabels:
+      app: auth
+      environement: dev
+      release: stable
+      version: 1.0.0 
+    matchExpressions:  
+      - {key: partition, operator: In, values: [training-k8s, training-treeptik-k8s, super-students]}
+      - {key: tier, operator: NotIn, values: [frontssl, webserver]} 
   template:
     metadata:
       labels:
         app: auth
-        track: stable
-        version: 1.0.0
+        environement: dev
+        partition: training-k8s
+        release: stable
+        tier: authentification
+        version: 1.0.0   
     spec:
       containers:
         - name: auth

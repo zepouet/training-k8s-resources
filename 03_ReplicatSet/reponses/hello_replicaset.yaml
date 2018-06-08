@@ -4,14 +4,22 @@ metadata:
   name: hello
 spec:
   replicas: 1
-  selector:
-    matchLabels:
+  selector: // Une des manières possibles. Exemple Label Selector avec matchLabels et matchExpressions
+    matchLabels: 
       app: hello
+      environement: dev
+      release: stable
+    matchExpressions:  
+      - {key: partition, operator: In, values: [training-k8s, training-treeptik-k8s, super-students]}
+      - {key: tier, operator: NotIn, values: [authentification, frontssl]} 
   template:
     metadata:
       labels:
         app: hello
-        track: stable_1.0.0
+        environement: dev
+        partition: training-k8s
+        realease: stable
+        tier: webserver
     spec:
       containers:
         - name: hello

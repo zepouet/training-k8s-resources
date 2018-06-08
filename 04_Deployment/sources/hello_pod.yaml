@@ -4,7 +4,10 @@ metadata:
   name: hello
   labels:
     app: hello
-    track: stable_1.0.0
+    environement: production
+    partition: training-k8s
+    release: stable
+    tier: webserver
 spec:
   containers:
     - name: hello

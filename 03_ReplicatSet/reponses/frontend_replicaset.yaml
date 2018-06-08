@@ -1,17 +1,25 @@
 apiVersion: extensions/v1beta1
 kind: ReplicaSet
 metadata:
-  name: auth
+  name: frontend
 spec:
   replicas: 1
-  selector:
+  selector: // Une des manières possibles. Exemple Label Selector avec matchLabels et matchExpressions
     matchLabels:
       app: frontend
+      environement: dev
+      release: stable
+    matchExpressions:  
+      - {key: partition, operator: In, values: [training-k8s, training-treeptik-k8s, super-students]}
+      - {key: tier, operator: NotIn, values: [authentification, webserver]} 
   template:
     metadata:
       labels:
         app: frontend
-        track: stable_1.0.0
+        environement: dev  
+        partition: training-k8s      
+        realease: stable
+        tier: fronthttps
     spec:
       containers:
         - name: nginx
