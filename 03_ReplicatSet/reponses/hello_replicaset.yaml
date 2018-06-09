@@ -18,7 +18,7 @@ spec:
         app: hello
         environement: dev
         partition: training-k8s
-        realease: stable
+        release: stable
         tier: webserver
     spec:
       containers:

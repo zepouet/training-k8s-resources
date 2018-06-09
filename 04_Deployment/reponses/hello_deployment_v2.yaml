@@ -7,7 +7,7 @@ spec:
   selector: // Une des manières possibles. Exemple avec matchLabels et matchExpressions
     matchLabels:
       app: hello
-      environement: dev
+      environement: production
       release: stable
       version: 2.0.0 
     matchExpressions:  
@@ -17,7 +17,7 @@ spec:
     metadata:
       labels:
         app: hello
-        environement: dev
+        environement: production
         partition: training-k8s
         release: stable
         tier: webserver
@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - name: hello
-          image: "kelseyhightower/hello:1.0.0"
+          image: "kelseyhightower/hello:2.0.0"
           ports:
             - name: http
               containerPort: 80
