@@ -35,14 +35,66 @@ Il s'agit ici de décrire les mécanismes mis en oeuvre lors du lancement de cha
 - 7.1.1 - kubelet demande à Docker d'executer le(s) container(e) du Pod 
 - 7.1.2 - Docker lance le(s) container(s) 
 - 7.2 kube-proxy pour la partie (proxy-)networking :
-- 7.2.1 - kube-proxy récupère l'adresse IP du container 
-- 7.2.2 - kube-proxy utilise netflilter pour authoriser le forward des flux vers cet IP en invoquant le set de commandes iptables. 
+- 7.2.1 - kube-proxy attribue l'adresse IP au Pod ( DHCP )
+- 7.2.2 - kube-proxy utilise netflilter pour autoriser le forward des flux vers cet IP en invoquant le set de commandes iptables. En
 
-Le Pod est mainteant lancé avec un adresse IP. Afin de maintenir l'état décrit dans le Deployement 
+Le Pod est mainteant lancé avec un adresse IP. Aussi et afin de maintenir l'état décrit dans le Deployement : 
 
-8 - kube-apiserver commande à kube-controller-manger de lancer un Deployement Controler : une boucle qui va s'assurer que le Deployment reste tel que décrit dans 
+8 - kube-apiserver commande à kube-controller-manger de lancer un Deployement Controler : une boucle qui va s'assurer que le Deployment reste tel que décrit dans le fichier de configuration. 
+
+### Exposer les Pods sur le Cluster 
+
+Même si les Pods viennent avec leurs IPs, l'application ne peut pas s'appuyer dessus de manière continue : en effet, les controleurs de type ReplicatSet ou Deployment creént et détruisent les PODs dynamiquement (scaling UP, scaling Down, rolling upgrade....). Il est donc nécessaire d'introduire un mécanisme qui va mapper les IPs des Pods à une entité logique plus stable, qui demeurera même si le Pod est détruit et sera en mesure de mapper les flux sur la nouvelle IP du nouveau Pod.  
+
+__Les services__ Kubernetes sont ces objets kubernetes qui permettent d'identifier un groupe logique de Pods ainsi que les politiques pour y acceder. Pour définir ce groupe logique de Pods on utilise à nouveau le Label Selector. 
+
+La spécification suivante créera un __Service__ :  
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app: MyApp
+  type: ClusterIP
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 9080
+  - name: https
+    protocol: TCP
+    port: 443
+    targetPort: 9433
+```
+
+- Ce service s'appelera "my-service"
+- Il sélectionnera tous les Pods qui ont le label "MyApp"
+- Le service est de type "ClusterIP" : il aura une adresse IP virtuelle (VIP) distribuée sur tout le Cluster. 
+- Le service dont l'IP est ClusterIP ecoutera sur les ports TCP:80 ( HTTP ) et sur TCP:443( HTTPS ) 
+- Au niveau des Nodes cela signifie : kuybe-api installera les règles iptables via kube-proxy sur chaque noeud qui captureront le trafic à destination des ports 80 et 443 et qui redirigera vers les ports 9080 et 9430 
+- Un object de type Endpoint appelé 'my-service" sera implicitement crée. Il exposera les IPs des Pods au service.  Autrement dit il sera possible de joindre les Pods au travers de la VIP "ClusterIP" grâce à ce Endpoint.    
+- Endpoint evaluera continuellement quels sont les Pods taggués MyApp et donc leurs IPs, et tiendra à jour un inventaire des IPs des Pods. 
+- Lorsqu'un requête utilisateur arrivera sur la ClusterIP, le Service interrogera le Enpoint pour savoir sur quel Pod router la requete et donc sur quelle IP 
+- Le Endpoint choisira en mode random le Pod à contacter, les règles iptables sur chaque Noeud permettant d'intercepter le trafic en 80/443 pour le rediriger sur 9080/9433  
+
+### Pods "auth" et "hello"
+
+En se basant sur les fichiers de configuration des Pods 
+
+le fichier de configuration du __Pod "auth"__ est disponible ici 
+
+`https://github.com/Treeptik/training-k8s-resources/blob/master/05_Services/sources/auth_pod.yaml`
+
+le fichier de configuration du __Pod "hello"__ ,construit dans l'exercice précédent, est disponible ici :
+
+`https://github.com/Treeptik/training-k8s-resources/blob/master//05_Services/sources/hello_pod.yaml`
 
 
-Finalement, 
+2. Ecrire le fichier de configuration du Service pour le Pod "auth"
+3. Ecrire le fichier de configuration du Service pour le Pod "hello"
+
 
 
