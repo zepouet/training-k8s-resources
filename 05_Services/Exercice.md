@@ -1,144 +1,48 @@
 # Exercice : Les Services 
 
-La problématique a été abordée dans les parties précedentes : Comment les Pods sont  exposés : 
+Dans les parties précedentes nous avons lancé des ReplicatSets et des Deployments (qui eux-mêmes s'appuis sur des ReplicatSets ) pour executer les Pods de containers qui constituent les composants de l'application. 
+
+Dans cet exercice nous allons __mettre en ligne l'application APP__ en utilisant les Services Kubernetes pour exposer chaque Pod : 
 - Sur Internet pour le Pod "frontend", 
-- En interne pour les composants "auth" et "hello". 
+- En interne pour les Pods "auth" et "hello". 
 
-`https://github.com/kelseyhightower/app`
-
-
-A la fin de l'exercice nous aurons : 
-- Ecrit les fichiers de configuration pour "auth" et "hello" ainsi que celui du frontend Nginx "frontend"
-- Crée le Deployment pour tous les composants le l'application APP dans sa version 1.0.0
-- Scalé le Deployment de l'application APP version 1.0.0 
-- Mettre a jour - update - de la version de l'Application APP dans sa version 2.0.0 
-
-![Application APP](https://github.com/Treeptik/training-k8s-resources/blob/master/04_Deployment/images/Treeptik-training-k8s-exo4-1.jpg?raw=true "Application APP")
+A la fin de cet exercice nous aurons 
+- Ecrit les fichier de configuration des Services 
+- ..
+- ..
 
 
-Les différentes parties ne seront pas exposées : 
-- sur Internet pour le frontend, 
-- en interne pour les composants "auth" et "hello". 
+## Introduction 
 
-L'Application APP n'est pas encore en mesure reçevoir et de traiter les requêtes utlisateurs : cette thématique sera abordée dans la partie dédiée aux Services.  
+Nous avons vu lors des exercices précédents que chaque Pod possède une adresse IP. 
 
-  
-## Introduction : 
+1. Rappeler la commande pour obtenir l'adresse IP d'un POD 
 
-Les pratiques DevOps impliquent de pouvoir déployer de nouvelles versions applicatives à la volée c'est à dire sans coupure de service. 
+Il s'agit ici de décrire les mécanismes mis en oeuvre lors du lancement de chaque deployment afin de mettre en evidence la nécéssité des Services Kubernetes. 
 
-L'objet Deployment se positionne pour répondre à ce besoin, en adoptant le point de vue suivant : 
-- La stack applicative est composées de Pods, 
-- L'update de la stack applicative consiste à l'update des containers des Pods, 
-- Un ReplicatSet supervise les Pods, 
-- L'Objet Deployment pilote le ReplicatSet des Pods - notamment pendant la mise à jour de la stack applicative. Cette partie est importante : le Deployment utilise son ReplicatSet pour transmettre les ordres à l'API Kubernetes. 
+![POD](https://github.com/Treeptik/training-k8s-resources/blob/master/05_Services/images/Treeptik-training-k8s-exo5-workflow_pod.jpg?raw=true "POD")
 
-En definisant un objet Deployment avec son fichier de configuration .yaml, on définit l'état du Pod à atteindre, en particulier au niveau de versionning. Le  Deployment assure la transition vers le nouvel état de telle manière à ne pas couper le service applicatif. 
+- 1 L'utililsateur invoque kubectl pour lancer un deployment via un fichier de configuration,
+- 2 kubectl transmet la requete à l'API kube-apiserver
+- 3 kube-apiserver sauvegarde les informations liées au Pod à deployer dans etcd
+- 4 kube-scheduler recherche (dans etcd) si des Pods correpondant sont déjà lancés : il n'en trouve pas. 
+- 5 kube-scheduler décide sur quel Node le Pod sera lancé. Pour cela kube-scheduler se base :  
+- 5.1 : sur les spécifications du Pod lui même - par exemple si un container du Pod a besoin de disque SSD pour son volume persistant, kube-scheduler selectionnera un Node avec des disques SSD. 
+- 5.2 : sur les Pods déjà existants dans le cluster : y a t'il des affinités avec le Pods à lancer ? Etc etc. kube-scheduler est "topology-aware"
+- 6 kube-scheduler demande à kube-api de lancer le Pod - sur le Node 2 par exemple 
+- 7 kube-apiserver invoque kubelet et kube-proxy sur le Node 2 : 
+- 7.1 kubelet pour lancer le Pod de container : 
+- 7.1.1 - kubelet demande à Docker d'executer le(s) container(e) du Pod 
+- 7.1.2 - Docker lance le(s) container(s) 
+- 7.2 kube-proxy pour la partie (proxy-)networking :
+- 7.2.1 - kube-proxy récupère l'adresse IP du container 
+- 7.2.2 - kube-proxy utilise netflilter pour authoriser le forward des flux vers cet IP en invoquant le set de commandes iptables. 
 
-Grâce à l'objet Deployment on peut par exemple : 
-- Créer from scracth une stack applicative dans sa version 1
-- Scaler le deployment version 1 pour s'adapter à la charge applicative. 
-- Mettre à jour cette stack applicative dans une version 2 
-- Mettre en pause / reprendre un deployement.... 
+Le Pod est mainteant lancé avec un adresse IP. Afin de maintenir l'état décrit dans le Deployement 
 
-
-### Etude d'un fichier de configuration de Deployment
-
-On se donne le fichier suivant :
-
-```
-apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  name: soaktest
-spec:
-  replicas: 5
-  selector:
-    matchLabels:
-      app: soaktest
-  template:
-    metadata:
-      labels:
-        app: soaktest
-    spec:
-      containers:
-      - name: soaktest
-        image: nickchase/soaktest
-        ports:
-        - containerPort: 80
-```
-
-Comme tous les objets de l'API Kubernetes, un Deployment est defini avec les champs **apiVersion**, **kind**, et **metadata**. A cela on ajoute le champs **spec** qui décrit les spécifications d'un Pod à déployer. 
-
-- On retrouve le champs **.spec.selector.** introduit avec l'objet ReplicatSet. Ce champ sera transmit au ReplicatSet associé à ce Deployment. 
-- Comme pour le ReplicaSet la bonne pratique est d'utiliser le "Label Selector" et de le préférer aux "Labels" simple présent dans le champs **.spec.template.metadata.labels** . 
-- Enfin, l'objet Deployment est à préférer au ReplicatSet car il permet de gérer le cycle de vie de l'application au sein de l'usine logielle : update, rollback de versions... 
-
-1. Donner le nombre de POD qui sera lancé lors de la creation du Deployment avec ce fichier de configuration
-2. Trouver la commande kubectl pour créer ce Deployment. 
-3. Quelle Image Docker est utilisée  ? 
-4. Quel sont les labels associés au Pod qui sera orchestré par ce Deployment ? 
-5. Quel est le selector pour ce Deployment ? A comparer avec la réponse du 4. 
+8 - kube-apiserver commande à kube-controller-manger de lancer un Deployement Controler : une boucle qui va s'assurer que le Deployment reste tel que décrit dans 
 
 
-### Configuration du Deployment pour les Pods "auth", "hello" et "frontend". 
+Finalement, 
 
-Pour construire les fichiers de configuration des 3 Deployment nous allons nous appuyer sur les fichiers de configuration des Pod "auth", "hello" et "frontend". 
-Ces fichiers ont été explicité dans l'exercice 03_ReplicatSet. On les rappelle :  
-
-le fichier de configuration du __Pod "auth"__ est disponible ici 
-
-`https://github.com/Treeptik/training-k8s-resources/blob/master/04_auth/sources/auth_pod.yaml`
-
-le fichier de configuration du __Pod "hello"__ ,construit dans l'exercice précédent, est disponible ici :
-
-`https://github.com/Treeptik/training-k8s-resources/blob/master/03_ReplicatSet/sources/hello_pod.yaml`
-
-le fichier de configuration du __Pod "frontend"__ est donné ici :
-
-`https://github.com/Treeptik/training-k8s-resources/blob/master/03_ReplicatSet/sources/frontend_pod.yaml`
-
-
-On rappelle que 
-- Dans le fichier de configuration d'un Deployment, le champ **.spec.template** décrit le template d'un Pod (celui décrit dans le fichier de configuration du Pod)
-
-
-7. Contruire le fichier de configuration du Deployment pour le Pod "auth"
-8. Contruire le fichier de configuration du Deployment pour le Pod "hello"
-9. Contruire le fichier de configuration du Deployment pour le Pod "frontend"
-
-10. Creér les 3 Deployments avec les fichiers de configurations complétés précedement.   
-11. Quel est le resultat de la commande : `kubectl get pods --show-labels`
-12. Quel est le resultat de la commande : `kubectl get deployments`
-
-13. Quel est les resultats des commandes : `kubectl describe rs/auth` && `kubectl describe rs/hello` && `kubectl describe rs/frontend`
-
-
-### Scalabilité 
-
-Il est facile de re-dimensionner à la volée (scale-up ou scale-down) un Deployment. 
-Puisque les Deployments ont été crée en utilisant des fichiers de configuration il s'agit de mettre à jour le champ **.spec.replicas** avec la nouvelle valeur cible. 
-
-Les Deployments pour la version 1.0.0 de la stack applicative seront scalés tels que :
-- Un replica de 3 POD "frontend"
-- Un replica de 5 POD "auth"
-- Un replica de 5 POD "hello"
-
-14. Mettre à jour les fichiers de Configurations pour les 3 Deployments
-15. Que faut-il faire pour que les nouvelles valeures cibles de replicas soient prises en compte ? 
-16. Decrivez précisement les nouveaux groupes de PODs : quel est le nom des pods, sur quels noeuds sont-ils executés ?  
-17. Quel est les resultats des commandes : `kubectl describe rs/auth` && `kubectl describe rs/hello` && `kubectl describe rs/frontend`. Combien de ReplicaSets chaque Deployment a t-il crée ? 
-
-### Montée en version Applicative - Rolling Update 
-
-Il est également facile de faire une rolling update à la volée - montée en version - dans notre cas avec un Deployment.
-
-La version 1.0.0 de APP est lancée. On veut déployer la __version 2.0.0__  à la volée avec les Deployments suivants 
-- Un replica de 3 POD "frontend"
-- Un replica de 5 POD "auth"
-- Un replica de 5 POD "hello"
-
-
-18. Mettre à jour les Deployments
-19. Quelle commande pouvez-vous utiliser pour vérifier le déroulement des mises à jour ( rollout status ) ? 
 
