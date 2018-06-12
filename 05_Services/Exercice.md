@@ -17,6 +17,7 @@ A la fin de cet exercice nous aurons
 Nous avons vu lors des exercices précédents que chaque Pod possède une adresse IP. 
 
 1. Rappeler la commande pour obtenir l'adresse IP d'un POD 
+//  kubectl get pods -l run=**"podname"** -o yaml | grep podIP
 
 Il s'agit ici de décrire les mécanismes mis en oeuvre lors du lancement de chaque deployment afin de mettre en evidence la nécéssité des Services Kubernetes. 
 
@@ -25,7 +26,7 @@ Il s'agit ici de décrire les mécanismes mis en oeuvre lors du lancement de cha
 - 1 L'utililsateur invoque kubectl pour lancer un deployment via un fichier de configuration,
 - 2 kubectl transmet la requete à l'API kube-apiserver
 - 3 kube-apiserver sauvegarde les informations liées au Pod à deployer dans etcd
-- 4 kube-scheduler recherche (dans etcd) si des Pods correpondant sont déjà lancés : il n'en trouve pas. 
+- 4 kube-scheduler recherche dans etcd (via kube-apiserver) si des Pods correpondant sont déjà lancés : il n'en trouve pas. 
 - 5 kube-scheduler décide sur quel Node le Pod sera lancé. Pour cela kube-scheduler se base :  
 - 5.1 : sur les spécifications du Pod lui même - par exemple si un container du Pod a besoin de disque SSD pour son volume persistant, kube-scheduler selectionnera un Node avec des disques SSD. 
 - 5.2 : sur les Pods déjà existants dans le cluster : y a t'il des affinités avec le Pods à lancer ? Etc etc. kube-scheduler est "topology-aware"
@@ -42,11 +43,18 @@ Le Pod est mainteant lancé avec un adresse IP. Aussi et afin de maintenir l'ét
 
 8 - kube-apiserver commande à kube-controller-manger de lancer un Deployement Controler : une boucle qui va s'assurer que le Deployment reste tel que décrit dans le fichier de configuration. 
 
+
 ### Exposer les Pods sur le Cluster 
 
-Même si les Pods viennent avec leurs IPs, l'application ne peut pas s'appuyer dessus de manière continue : en effet, les controleurs de type ReplicatSet ou Deployment creént et détruisent les PODs dynamiquement (scaling UP, scaling Down, rolling upgrade....). Il est donc nécessaire d'introduire un mécanisme qui va mapper les IPs des Pods à une entité logique plus stable, qui demeurera même si le Pod est détruit et sera en mesure de mapper les flux sur la nouvelle IP du nouveau Pod.  
+Même si les Pods viennent avec leurs IPs, l'application ne peut pas s'appuyer dessus de manière continue : en effet, les controleurs de type ReplicatSet ou Deployment créent et détruisent les PODs dynamiquement (scaling Up, scaling Down, rolling upgrade....) ou bien les Nodes eux-mêmes peuvent tomber en panne. Il est donc nécessaire d'introduire un mécanisme qui va mapper les IPs des Pods à une entité logique plus stable, qui demeurera même si le Pod est détruit et qui sera en mesure de mapper les flux sur la nouvelle IP du nouveau Pod.  
 
 __Les services__ Kubernetes sont ces objets kubernetes qui permettent d'identifier un groupe logique de Pods ainsi que les politiques pour y acceder. Pour définir ce groupe logique de Pods on utilise à nouveau le Label Selector. 
+
+Services : 
+- ClusterIP : service par defaut 
+- NodePort : 
+- Load Balancer :  
+
 
 La spécification suivante créera un __Service__ :  
 
