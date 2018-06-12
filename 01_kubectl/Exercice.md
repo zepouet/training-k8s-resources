@@ -42,7 +42,7 @@ La sortie de la commande devrait afficher :
 
 `deployment.apps "nginx" created `
 
-Kubernetes a crée automatiquement un "Deployment". Cet objet, qui sera etudié plus tard, est utilisé pour orchestrer le POD hello-world tout au long de son cycle de vie : create, scale... .
+Kubernetes a crée automatiquement un "Deployment". Cet objet, qui sera etudié plus tard, est utilisé pour orchestrer le POD nginx tout au long de son cycle de vie : create, scale... .
 
 5. Quel est le résultat de la commande :  
  
@@ -50,13 +50,13 @@ Kubernetes a crée automatiquement un "Deployment". Cet objet, qui sera etudié 
 
 Etudions les informations données par la sortie de ces commandes - en particulier : 
 
-6. Identifier la Colonne "NAME", à votre avis que représente la première ligne *hello-node-.....* ?
+6. Identifier la Colonne "NAME", à votre avis que représente la première ligne *nginx-.....* ?
 7. Identifier la Colonne "READY", à votre avis à quoi correspondent les chiffres : "1/1" ? 
 
 - Le Status du POD est normalement en mode '"Running". En vous aidant de la documentation (trouvée sur Internet)
 8. Trouver la liste de tous les *status* possible dans le cycle de vie d'un POD. 
-9. Trouver la commande qui affiche les logs temps reels du pod "hello-node"
-10. Est-il possible de voir les logs du conteneur executé dans le pod "hello-node" - comment ? Trouver la commande. 
+9. Trouver la commande qui affiche les logs temps reels du pod "nginx"
+10. Est-il possible de voir les logs du conteneur executé dans le pod "nginx" - comment ? Trouver la commande. 
 
 
 ## 2 - Scalabilité - en mode déclaratif - sur Kubernetes.  
