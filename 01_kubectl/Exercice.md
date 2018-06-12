@@ -59,24 +59,3 @@ Etudions les informations données par la sortie de ces commandes - en particuli
 10. Est-il possible de voir les logs du conteneur executé dans le pod "nginx" - comment ? Trouver la commande. 
 
 
-## 2 - Scalabilité - en mode déclaratif - sur Kubernetes.  
-
-Le provisionning à la demande est une fonctionnalité clef de K8s. Il est facile de scaler son application - et de fournir la capacité juste nécessaire - pour répondre aux requêtes utilisateurs en fontion des pics de charge. 
-
-__L'approche de K8s est déclarative__ : il s'agit de "déclarer" le nombre d'instance / de replica que l'on souhaite avoir en tout temps. 
-
-L'objet ReplicatSet qui sera etudié en détail dans la suite de la formation sert à maintenir le nombre de replica au niveau souhaité. 
-
-11. Scaler le replicaset : de 1 à 5 replicas 
-
-- Obtenir la description du nouveau Deployment en tapant la commande : 
-
-`kubectl get deployment ` 
-
-12. Quelle est la signification de chaque colonnes "DESIRED", "CURRENT", "UP-TO-DATE", "AVAILABLE"
-13. Obtenir la liste de toutes les instances du POD.  
-
-
-
-
-
