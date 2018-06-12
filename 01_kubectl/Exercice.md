@@ -17,18 +17,9 @@ Plus tard nous envisagerons le provisionning d'Applications, qui consiste à aut
 
 ## Objectifs 
 
-A la fin de l'exercice nous aurons déployé __en ligne de commande via *kubectl*__ une application Hello-Node telle que :
+A la fin de l'exercice nous aurons déployé __en ligne de commande via *kubectl*__ un groupe de containers Nginx sur Kubernetes telle que :
 
 ![Architecture Cible de l'exercice](https://github.com/Treeptik/training-k8s-resources/blob/master/01_kubectl/images/Treeptik-training-k8s-exo1.jpg?raw=true "Architecture Cible de l'exercice")
-
-La charge de travail déployée via un POD est conteneurisé en utilisant Docker. Kubernetes via l'objet ReplicaSet sera en mesure de provisionner plusieurs replicas. L'image du container est disponible sur :
-
-`/chemin/du/repository `
-A définir. 
-
-Sources : 
-
-`https://github.com/Treeptik/training-k8s-by-treeptik/tree/laurent-branch/tmp_exos/01_kubectl/sources`
 
 
 ## 1 - Cluster, Pod, Deployment sur Kubernetes 
@@ -43,13 +34,13 @@ Se connecter au Cluster K8s de votre environnement de lab provisionné précedem
 `kubectl get pods `
 
 4. Utiliser *kubectl* pour *lancer* un POD avec les options : 
-* nom du POD : hello-world 
-* image : hub.docker/.../hello-node:v1 ( à déterminer)
-* port : 8080
+* nom du POD : nginx_pod
+* image : nginx
+* port : 80
 
 La sortie de la commande devrait afficher : 
 
-`deployment "hello-node" created `
+`deployment.apps "nginx" created `
 
 Kubernetes a crée automatiquement un "Deployment". Cet objet, qui sera etudié plus tard, est utilisé pour orchestrer le POD hello-world tout au long de son cycle de vie : create, scale... .
 
