@@ -59,3 +59,6 @@ Etudions les informations données par la sortie de ces commandes - en particuli
 10. Est-il possible de voir les logs du conteneur executé dans le pod "nginx" - comment ? Trouver la commande. 
 
 
+
+
+

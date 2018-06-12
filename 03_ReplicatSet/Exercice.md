@@ -38,7 +38,7 @@ L'objet **ReplicaSet** est la nouvelle génération de **ReplicationController**
 - Le ReplicatSet va superviser de multiples Pods sur de multiples Nodes en s'appuyant sur un nouveau champs : le **selector** qui ajoute - par rapport aux labels - des fonctionnalités avancées en terme de filtrage des Pods a orchestrer. Ci après 2 exemples déclaratifs utilisant le selector 
 
 ```
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: ReplicaSet
 ...
 spec:
@@ -50,7 +50,7 @@ spec:
 ```
 
 ```
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: ReplicaSet
 ...
 spec:
@@ -68,7 +68,7 @@ spec:
 On se donne le fichier suivant :
 
 ```
- apiVersion: extensions/v1beta1
+ apiVersion: apps/v1
  kind: ReplicaSet
  metadata:
    name: soaktestrs
