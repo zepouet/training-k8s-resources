@@ -81,7 +81,7 @@ On se donne le fichier suivant :
    template:
      metadata:
        labels:
-         app: soaktestest1
+         app: soaktest1
          track: dev
      spec:
        containers:
